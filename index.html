@@ -20,18 +20,31 @@
   <p>This is the home page of H5Ppractice.</p>
   <div class="g-signin2" data-onsuccess="onSignIn"></div>
   
-      <?php
+    <?php
     // handle the link submission
     if(isset($_POST['h5pLink'])){
-        //validate the link
-        if(is_valid_h5p_link($_POST['h5pLink'])){
-            // Strip the trailing /embed if it exists
-            $link = rtrim($_POST['h5pLink'], "/embed");
-            // save the link in the database
-            save_h5p_link_in_db($link);
+        //Validate the link
+        $link = $_POST['h5pLink'];
+        $link = str_replace("/embed", "", $link);
+        if(filter_var($link, FILTER_VALIDATE_URL) && strpos($link, 'h5p') !== false){
+            // link is valid, save it
+            //connect to the database
+            $db = new mysqli('host', 'username', 'password', 'database_name');
+            // insert the link and other information into the database
+            $query = "INSERT INTO h5p_links (link, user_id) VALUES ('$link', '$user_id')";
+            if ($db->query($query) === TRUE) {
+                echo "The link has been saved";
+            } else {
+                echo "Error: " . $query . "<br>" . $db->error;
+            }
+            $db->close();
         }else{
-            //link not valid, show error
-            echo "The submitted link is not a
+            // link is not valid, show error
+            echo "The submitted link is not a valid H5P link";
+        }
+    }
+    ?>
+
 
 
 </body>
