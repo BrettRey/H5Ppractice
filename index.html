@@ -19,6 +19,20 @@
   </nav>
   <p>This is the home page of H5Ppractice.</p>
   <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  
+      <?php
+    // handle the link submission
+    if(isset($_POST['h5pLink'])){
+        //validate the link
+        if(is_valid_h5p_link($_POST['h5pLink'])){
+            // Strip the trailing /embed if it exists
+            $link = rtrim($_POST['h5pLink'], "/embed");
+            // save the link in the database
+            save_h5p_link_in_db($link);
+        }else{
+            //link not valid, show error
+            echo "The submitted link is not a
+
 
 </body>
 </html>
